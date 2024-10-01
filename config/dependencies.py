@@ -1,9 +1,12 @@
 from datetime import datetime
+from socketserver import UDPServer
 
 from fastapi import Request, HTTPException, Depends
 from jose import jwt, JWTError
+from sqlalchemy.sql.functions import current_user
 
 from config.settings import settings
+from models.users import Users
 from services.users_services import UsersService
 
 
@@ -30,3 +33,9 @@ async def get_current_user(token: str = Depends(get_token)):
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
     return  user
+
+
+# async def get_current_admin_user(current_user: Users = Depends(get_current_user):
+#     if current_user.role != "admin":
+#         raise HTTPException(status_code=401, detail="Not admin!")
+#     return current_user
