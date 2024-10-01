@@ -2,7 +2,7 @@ from venv import create
 
 from fastapi import APIRouter, HTTPException, Response
 
-from auth.auth import get_password_hash, verify_password, authenticate_user, create_access_token
+from auth.auth import get_password_hash, authenticate_user, create_access_token
 from services.users_services import UsersService
 from shemas.users_shemas import SUserAuth
 
@@ -25,6 +25,6 @@ async def login_user(response: Response, user: SUserAuth):
     user = await authenticate_user(user.email, user.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
-    access_token = create_access_token({"sub": user.id})
+    access_token = create_access_token({"sub": str(user.id)})
     response.set_cookie("booking_service_access_token", access_token, httponly=True)
 

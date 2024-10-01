@@ -7,6 +7,7 @@ from marshmallow.fields import Email
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
+from config.settings import settings
 from services.users_services import UsersService
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -22,7 +23,7 @@ def create_access_token(data: dict) -> str:
     expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
-        to_encode, "qwhdohqwoiduqowe@(*$Y!(Yhr", "HS256"
+        to_encode, settings.SECRET_KEY, settings.ALGORITHM
     )
     return encoded_jwt
 
